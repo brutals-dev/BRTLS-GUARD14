@@ -15,9 +15,7 @@ client.on("guildMemberAdd", async (member) => {
   const channel = member.guild.channels.cache.get(VERIFICATION_CHANNEL_ID);
   if (!channel) return;
 
-  const msg = await channel.send(
-    `${member} ${member} ${member}\n⚡ Verify here to unlock the server!`
-  );
+ `${member} ${member} ${member}\n⚔️ WELCOME TO BRUTALS CORE ⚔️\n🔥 Verify now and prove you belong among the elite.`
 
   setTimeout(() => msg.delete().catch(() => {}), 6000);
 });
