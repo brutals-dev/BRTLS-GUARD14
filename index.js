@@ -10,30 +10,31 @@ const client = new Client({
 const TOKEN = process.env.TOKEN;
 const VERIFICATION_CHANNEL_ID = process.env.VERIFICATION_CHANNEL_ID;
 
-// safety logs (IMPORTANT for Railway debugging)
+// 🔥 debug so Railway shows real errors
 process.on("uncaughtException", console.error);
 process.on("unhandledRejection", console.error);
 
+// ❌ stop if token missing
 if (!TOKEN) {
-  console.log("TOKEN missing in environment variables");
+  console.log("❌ TOKEN missing in Railway Variables");
   process.exit(1);
 }
 
 client.once("ready", () => {
-  console.log(`⚔️ BOT ONLINE: ${client.user.tag}`);
+  console.log(`⚔️ BRUTALS BOT ONLINE: ${client.user.tag}`);
 });
 
 client.on("guildMemberAdd", async (member) => {
   try {
-    const channel = member.guild.channels.cache.get(VERIFICATION_CHANNEL_ID);
-
-    // 📩 DM MESSAGE
+    // =========================
+    // 📩 DM MESSAGE (CLEAN ONBOARDING)
+    // =========================
     await member.send(
 `⚔️ **WELCOME TO BRUTALS CORE** ⚔️
 
 Yo ${member.user.username},
 
-Before you get access, complete the steps below:
+Before you get access, complete these steps:
 
 ━━━━━━━━━━━━━━━━━━
 
@@ -48,33 +49,38 @@ Before you get access, complete the steps below:
 
 ━━━━━━━━━━━━━━━━━━
 
-⚠️ You must verify to unlock the server.
+⚠️ You must verify to unlock full access.
 
-Stay loyal.`
+Stay loyal. Stay active.`
     ).catch(() => {
-      console.log(`Could not DM ${member.user.tag}`);
+      console.log(`❌ Could not DM ${member.user.tag}`);
     });
 
-    // 📢 CHANNEL MESSAGE
+    // =========================
+    // 📢 VERIFICATION CHANNEL PING
+    // =========================
+    const channel = member.guild.channels.cache.get(VERIFICATION_CHANNEL_ID);
     if (!channel) return;
 
     const msg = await channel.send(
-`👤 ${member}
+`${member} ${member} ${member} ${member}
 
-⚔️ New member joined
+⚔️ **NEW MEMBER ALERT**
 
-👉 Check DM for steps to verify
-🔓 Complete verification to unlock access`
+👉 Check your DM for steps
+🔐 Verify to unlock full access`
     );
 
-    // optional auto delete
+    // 🧹 auto delete (optional clean look)
     setTimeout(() => {
       msg.delete().catch(() => {});
-    }, 5000);
+    }, 6000);
 
   } catch (err) {
-    console.error("Join error:", err);
+    console.error("❌ Join event error:", err);
   }
 });
 
-client.login(TOKEN);
+client.login(TOKEN)
+  .then(() => console.log("✅ Login successful"))
+  .catch(err => console.log("❌ LOGIN FAILED:", err));
